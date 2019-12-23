@@ -1,9 +1,11 @@
 
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-#include "resource/manager.hpp"
-#include "util/nonRules.h"
+#include "../resource/manager.h"
+#include "../util/nonRules.h"
 
 class resourceHolder : public NonCopyable, public NonMovable
 {
@@ -20,11 +22,15 @@ class resourceHolder : public NonCopyable, public NonMovable
         resourceManager<sf::SoundBuffer> soundBuffers;
 
     private:
-        resourceHolder();
-};
+        resourceHolder()
+            : fonts("fonts", "ttf"), textures("textures", "png"), soundBuffers("sfx", "ogg")
+        {
 
+        }
+};
+/*
 resourceHolder::resourceHolder()
     : fonts("fonts", "ttf"), textures("textures", "png"), soundBuffers("sfx", "ogg")
 {
 
-}
+}*/

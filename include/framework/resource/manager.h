@@ -7,7 +7,7 @@ class resourceManager
 {
     public:
         resourceManager(const std::string& folder, const std::string& extension)
-            : m_folder("./res/" + folder + "/"), m_extension("." + extension)
+            : m_folder("../res/" + folder + "/"), m_extension("." + extension)
         {
 
         }
@@ -34,6 +34,7 @@ class resourceManager
                 m_resources.insert(std::make_pair(name, f_resource));
             else
             {
+                throw std::string("Couldn't find " + path(name) + "!");
                 f_resource.loadFromFile(path("_missing"));
                 m_resources.insert(std::make_pair(name, f_resource));
             }

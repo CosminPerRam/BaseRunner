@@ -4,14 +4,22 @@
 #include <vector>
 #include <memory>
 
-#include "util/nonRules.h"
-#include "gui/widget.h"
+#include "../handlers/gui/widget.h"
+#include "../util/nonRules.h"
+#include "framework/resource/holder.h"
 
 namespace gui
 {
     class stack : public NonCopyable    //very straight down menu
     {
         public:
+            stack(const sf::RenderWindow& window, float baseY)
+                : m_position((float)window.getSize().x / 2.0f, baseY)
+                , m_size(300, 20)
+            {
+
+            }
+
             stack(const sf::Vector2f& position)
                 : m_position(position)
             {
@@ -48,5 +56,6 @@ namespace gui
             std::vector<std::unique_ptr<widget>> m_widgets;
 
             sf::Vector2f m_position;
+            sf::Vector2f m_size;
     };
 };

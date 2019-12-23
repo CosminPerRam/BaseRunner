@@ -6,8 +6,8 @@ SRC		:= src
 INCLUDE	:= include
 LIB		:= lib
 
-LIBRARIES	:= -lsfml-graphics -lsfml-window -lsfml-system
-EXECUTABLE	:= main.o
+LIBRARIES	:= -lsfml-system -lsfml-graphics -lsfml-window -lsfml-network -lsfml-audio -openal32
+EXECUTABLE	:= main
 
 all: $(BIN)/$(EXECUTABLE)
 
@@ -16,7 +16,7 @@ run: clean all
 	./$(BIN)/$(EXECUTABLE)
 
 $(BIN)/$(EXECUTABLE): $(SRC)/*.cpp
-	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o $@ $(LIBRARIES)
+	$(CXX) $(CXX_FLAGS) -I$(INCLUDE) -L$(LIB) $^ $(LIBRARIES) -o $@
 
 clean:
 	-rm $(BIN)/*
