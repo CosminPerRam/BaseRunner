@@ -9,7 +9,7 @@ Game::Game()
     : m_window ({1280, 720}, "BaseRunner")
 {
     m_window.setPosition({0, 0});
-    m_window.setFramerateLimit(60);
+    m_window.setFramerateLimit(240);
     pushState<statePlaying>(*this);
     pushState<stateMenu>(*this);
 }
@@ -87,6 +87,7 @@ void Game::handleEvent()
                 break;
             case sf::Event::MouseButtonPressed:
                 std::cout<<sf::Mouse::getPosition(m_window).x<<" "<<sf::Mouse::getPosition(m_window).y<<std::endl;
+                m_soundEngine.play("click");
                 break;
             case sf::Event::KeyPressed:
                 if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))

@@ -7,6 +7,8 @@
 
 #include "custom/gui/displayer.h"
 
+#include <SFML/Graphics.hpp>
+
 #include <iostream>
 
 class statePlaying : public state
@@ -20,6 +22,10 @@ class statePlaying : public state
             d->setText("making");
 
             m_stack.add(std::move(d));
+
+            rect.setSize({48, 48});
+            rect.setOutlineColor(sf::Color::Green);
+            rect.setFillColor(sf::Color::Blue);
         }
 
         void handleEvent(sf::Event e) 
@@ -32,7 +38,7 @@ class statePlaying : public state
         }
         void update(sf::Time deltaTime)
         {
-
+            rect.setPosition({sf::Mouse::getPosition(m_game->getWindow()).x, sf::Mouse::getPosition(m_game->getWindow()).y - 48});
         }
         void fixedUpdate(sf::Time deltaTime)
         {
@@ -42,9 +48,11 @@ class statePlaying : public state
         {
             m_stack.render(renderer);
 
-
+            renderer.draw(rect);
         }
 
     private:
         gui::stack m_stack;
+
+        sf::RectangleShape rect;
 };

@@ -7,7 +7,7 @@ class resourceManager
 {
     public:
         resourceManager(const std::string& folder, const std::string& extension)
-            : m_folder("../res/" + folder + "/"), m_extension("." + extension)
+            : m_folder("../res/const/" + folder + "/"), m_extension("." + extension)
         {
 
         }

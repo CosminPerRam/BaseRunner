@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "framework/handlers/state.h"
+#include "framework/handlers/sound.h"
 #include "../util/nonRules.h"
 #include "../addons/fpsCounter.h"
 
@@ -41,6 +42,8 @@ class Game : public NonCopyable, public NonMovable
         {
             return m_window;
         }
+
+        SoundEngine m_soundEngine;
 
     private:
         void handleEvent();
