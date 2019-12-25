@@ -5,6 +5,7 @@
 # Folders
 .vscode/
 bin/
+include/libs/
 
 # Files
 penal32

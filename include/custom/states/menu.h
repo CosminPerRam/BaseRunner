@@ -8,24 +8,26 @@
 
 #include <iostream>
 
-class statePlaying : public state
+class stateMenu : public state
 {
     public:
-        statePlaying(Game& game)
-            : state(game), m_testMenu(game.getWindow(), 50)
+        stateMenu(Game& game)
+            : state(game)
         {
             auto b = std::make_unique<gui::custom::button>();
+            b->setPosition({400, 200});
             b->setText("fuckoff");
-            b->setFunction([]() {
+            b->setFunction([&]() {
                 std::cout<<"clicked!"<<std::endl;
+                game.popState();
             });
 
-            m_testMenu.add(std::move(b));
+            m_stack.add(std::move(b));
         }
 
         void handleEvent(sf::Event e) 
         {
-            m_testMenu.handle(e, m_game->getWindow());
+            m_stack.handle(e, m_game->getWindow());
         }
         void handleInput()
         {
@@ -33,7 +35,7 @@ class statePlaying : public state
         }
         void update(sf::Time deltaTime)
         {
-
+            
         }
         void fixedUpdate(sf::Time deltaTime)
         {
@@ -41,9 +43,9 @@ class statePlaying : public state
         }
         void render(sf::RenderTarget& renderer)
         {
-            m_testMenu.render(renderer);
+            m_stack.render(renderer);
         }
 
     private:
-        gui::stack m_testMenu;
+        gui::stack m_stack;
 };

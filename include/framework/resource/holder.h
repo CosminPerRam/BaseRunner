@@ -28,9 +28,3 @@ class resourceHolder : public NonCopyable, public NonMovable
 
         }
 };
-/*
-resourceHolder::resourceHolder()
-    : fonts("fonts", "ttf"), textures("textures", "png"), soundBuffers("sfx", "ogg")
-{
-
-}*/

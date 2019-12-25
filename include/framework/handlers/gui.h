@@ -1,8 +1,11 @@
 
+#pragma once
+
 #include <SFML/Graphics.hpp>
 
 #include <vector>
 #include <memory>
+#include <iostream>
 
 #include "../handlers/gui/widget.h"
 #include "../util/nonRules.h"
@@ -13,19 +16,6 @@ namespace gui
     class stack : public NonCopyable    //very straight down menu
     {
         public:
-            stack(const sf::RenderWindow& window, float baseY)
-                : m_position((float)window.getSize().x / 2.0f, baseY)
-                , m_size(300, 20)
-            {
-
-            }
-
-            stack(const sf::Vector2f& position)
-                : m_position(position)
-            {
-
-            }
-
             ~stack() = default;
 
             void add(std::unique_ptr<widget> w) {

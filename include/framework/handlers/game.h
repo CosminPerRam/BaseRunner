@@ -20,20 +20,36 @@ class Game : public NonCopyable, public NonMovable
         template<typename T, typename... Args>
 
         void pushState(Args&&... args);
-        void pushState(std::unique_ptr<state> f_state);
-        void popState();
-        void exitGame();
+        void pushState(std::unique_ptr<state> f_state)
+        {
+            m_states.push_back(std::move(f_state));
+        }
+        void popState()
+        {
+            m_shouldPop = true;
+        }
+        void exitGame()
+        {
+            m_shouldPop = true;
+            m_shouldExit = true;
+        }
 
         template<typename T, typename... Args>
         void changeState(Args&&... args);
 
-        const sf::RenderWindow& getWindow() const;
+        const sf::RenderWindow& getWindow() const
+        {
+            return m_window;
+        }
 
     private:
         void handleEvent();
         void tryPop();
 
-        state& getCurrentState();
+        state& getCurrentState()
+        {
+            return *m_states.back();
+        }
 
         sf::RenderWindow m_window;
         std::vector<std::unique_ptr<state>> m_states;

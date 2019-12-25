@@ -2,14 +2,16 @@
 #include <iostream>
 
 #include "framework/handlers/game.h"
-#include "framework/handlers/statePlaying.h"
+#include "custom/states/menu.h"
+#include "custom/states/playing.h"
 
 Game::Game()
-    : m_window ({1280, 720}, "fuckers")
+    : m_window ({1280, 720}, "BaseRunner")
 {
-    m_window.setPosition({m_window.getPosition().x, 0});
+    m_window.setPosition({0, 0});
     m_window.setFramerateLimit(60);
     pushState<statePlaying>(*this);
+    pushState<stateMenu>(*this);
 }
 
 void Game::run()
@@ -83,35 +85,14 @@ void Game::handleEvent()
             case sf::Event::Closed:
                 m_window.close();
                 break;
+            case sf::Event::MouseButtonPressed:
+                std::cout<<sf::Mouse::getPosition(m_window).x<<" "<<sf::Mouse::getPosition(m_window).y<<std::endl;
+                break;
+            case sf::Event::KeyPressed:
+                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                    popState();
             default:
                 break;
         }
     }
 }
-
-state& Game::getCurrentState()
-{
-    return *m_states.back();
-}
-
-void Game::pushState(std::unique_ptr<state> f_state)
-{
-    m_states.push_back(std::move(f_state));
-}
-
-void Game::popState()
-{
-    m_shouldPop = true;
-}
-
-void Game::exitGame()
-{
-    m_shouldPop = true;
-    m_shouldExit = true;
-}
-
-const sf::RenderWindow& Game::getWindow() const
-{
-    return m_window;
-}
-
