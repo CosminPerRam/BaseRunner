@@ -4,8 +4,11 @@
 #include "framework/handlers/state.h"
 #include "framework/handlers/gui.h"
 #include "framework/handlers/game.h"
+#include "framework/util/maths.h"
 
 #include "custom/gui/displayer.h"
+#include "custom/handlers/player.h"
+#include "custom/content/level.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -15,44 +18,51 @@ class statePlaying : public state
 {
     public:
         statePlaying(Game& game)
-            : state(game)
+            : state(game), m_player(m_level.getScale())
         {
             auto d = std::make_unique<gui::custom::displayer>(sf::Vector2f(128, 32));
             d->setPosition({0, (float)game.getWindow().getSize().y - 32});
-            d->setText("making");
+            d->setText("playing");
 
             m_stack.add(std::move(d));
 
-            rect.setSize({48, 48});
-            rect.setOutlineColor(sf::Color::Green);
-            rect.setFillColor(sf::Color::Blue);
+            m_level.read("test");
         }
 
         void handleEvent(sf::Event e) 
         {
             m_stack.handle(e, m_game->getWindow());
+            
         }
+
         void handleInput()
         {
-
+            m_player.handleInput();
+            
         }
         void update(sf::Time deltaTime)
         {
-            rect.setPosition({sf::Mouse::getPosition(m_game->getWindow()).x, sf::Mouse::getPosition(m_game->getWindow()).y - 48});
+            m_level.update(deltaTime);
+            m_player.update(deltaTime);
         }
         void fixedUpdate(sf::Time deltaTime)
         {
-
+            m_level.fixedUpdate(deltaTime);
+            m_player.fixedUpdate(deltaTime);
         }
         void render(sf::RenderTarget& renderer)
         {
             m_stack.render(renderer);
 
-            renderer.draw(rect);
+            m_player.render(renderer);
+            m_level.render(renderer);
         }
 
     private:
         gui::stack m_stack;
 
-        sf::RectangleShape rect;
+        level m_level;
+        player m_player;
+
+        unsigned m_scale = 32;
 };

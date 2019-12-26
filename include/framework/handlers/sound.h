@@ -18,10 +18,11 @@ class SoundEngine : public NonCopyable, public NonMovable   //a very basic sound
 
         }
 
-        void play(const std::string& bufferName)
+        void play(const std::string& bufferName, const sf::Vector3f position = {0, 0, 0})
         {
             this->update();
             sounds.emplace_back(resourceHolder::get().soundBuffers.get(bufferName));
+            sounds[sounds.size() - 1].setPosition(position);
             sounds[sounds.size() - 1].play();
         }
 

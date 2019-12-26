@@ -5,7 +5,7 @@
 # Folders
 .vscode/
 bin/
-include/libs/
+include/nlohmann/
 
 # Files
 penal32

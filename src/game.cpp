@@ -4,6 +4,7 @@
 #include "framework/handlers/game.h"
 #include "custom/states/menu.h"
 #include "custom/states/playing.h"
+#include "custom/states/creating.h"
 
 Game::Game()
     : m_window ({1280, 720}, "BaseRunner")
@@ -11,7 +12,8 @@ Game::Game()
     m_window.setPosition({0, 0});
     m_window.setFramerateLimit(240);
     pushState<statePlaying>(*this);
-    pushState<stateMenu>(*this);
+    //pushState<stateMenu>(*this);
+    //pushState<stateCreating>(*this);
 }
 
 void Game::run()
