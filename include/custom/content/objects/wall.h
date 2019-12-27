@@ -30,6 +30,7 @@ class wall : public object
         void setPosition(const sf::Vector2u& position)
         {
             m_position = (sf::Vector2f)position;
+            rect.setPosition(m_position);
         }
 
         unsigned getType()

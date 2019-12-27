@@ -7,18 +7,17 @@
 #include "custom/states/creating.h"
 
 Game::Game()
-    : m_window ({1280, 720}, "BaseRunner")
+    : m_window ({settings::resolution::WIDTH, settings::resolution::HEIGHT}, "BaseRunner")
 {
     m_window.setPosition({0, 0});
     m_window.setFramerateLimit(240);
-    pushState<statePlaying>(*this);
-    //pushState<stateMenu>(*this);
-    //pushState<stateCreating>(*this);
+
+    pushState<states::menu>(*this);
 }
 
 void Game::run()
 {
-    constexpr unsigned TPS = 30;
+    constexpr unsigned TPS = 60;
     const sf::Time timePerUpdate = sf::seconds(1.0f / float(TPS));
     unsigned ticks = 0;
 
@@ -91,9 +90,6 @@ void Game::handleEvent()
                 std::cout<<sf::Mouse::getPosition(m_window).x<<" "<<sf::Mouse::getPosition(m_window).y<<std::endl;
                 m_soundEngine.play("click");
                 break;
-            case sf::Event::KeyPressed:
-                if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-                    popState();
             default:
                 break;
         }

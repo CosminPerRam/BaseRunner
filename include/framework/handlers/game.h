@@ -8,6 +8,7 @@
 
 #include "framework/handlers/state.h"
 #include "framework/handlers/sound.h"
+#include "framework/handlers/settings.h"
 #include "../util/nonRules.h"
 #include "../addons/fpsCounter.h"
 
@@ -23,6 +24,7 @@ class Game : public NonCopyable, public NonMovable
         void pushState(Args&&... args);
         void pushState(std::unique_ptr<state> f_state)
         {
+            std::cout<<"A"<<std::endl;
             m_states.push_back(std::move(f_state));
         }
         void popState()

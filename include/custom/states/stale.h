@@ -6,17 +6,18 @@
 #include "custom/gui/button.h"
 #include "framework/handlers/game.h"
 
-#include "custom/states/creating.h"
-#include "custom/states/playing.h"
+#include "custom/states/menu.h"
 
 #include <iostream>
 
 namespace states
 {
-    class menu : public state
+    class menu;
+
+    class stale : public state
     {
         public:
-            menu(Game& game)
+            stale(Game& game)
                 : state(game)
             {
                 auto b = std::make_unique<gui::custom::button>();
@@ -30,18 +31,18 @@ namespace states
 
                 b = std::make_unique<gui::custom::button>();
                 b->setPosition({400, 264});
-                b->setText("play");
+                b->setText("to menu");
                 b->setFunction([&]() {
-                    game.changeState<states::playing>(game);
+                    game.changeState<states::menu>(game);
                 });
 
                 m_stack.add(std::move(b));
 
                 b = std::make_unique<gui::custom::button>();
                 b->setPosition({400, 328});
-                b->setText("create");
+                b->setText("resume");
                 b->setFunction([&]() {
-                    game.changeState<states::creating>(game);
+                    game.popState();
                 });
 
                 m_stack.add(std::move(b));

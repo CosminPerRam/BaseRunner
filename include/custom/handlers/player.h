@@ -26,6 +26,10 @@ class player : public entity
         void update(sf::Time deltaTime)
         {
             rect.setPosition(m_position);
+
+            sf::Vector2i mouseCoord = sf::Mouse::getPosition();
+
+            rect.setRotation(math::angleOf(m_position, sf::Vector2f(mouseCoord)) + 180);
         }
 
         void fixedUpdate(sf::Time deltaTime)

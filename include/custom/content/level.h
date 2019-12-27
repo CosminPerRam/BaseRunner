@@ -10,6 +10,7 @@
 
 #include "framework/handlers/entity.h"
 #include "framework/handlers/object.h"
+#include "framework/handlers/settings.h"
 #include "custom/util/files.h"
 
 #include "custom/content/objects/wall.h"
@@ -17,7 +18,7 @@
 class level
 {
     public:
-        level(unsigned scale = 32)
+        level(unsigned scale = 64)
             : m_scale(scale), m_defaultScale(scale)
         {
 
@@ -71,8 +72,18 @@ class level
         
         void render(sf::RenderTarget& renderer)
         {
+            unsigned my = settings::resolution::HEIGHT / m_scale;
+            unsigned mx = settings::resolution::WIDTH / m_scale;
+
+            unsigned i = 0;
+
             for(auto& it : walls)
+            {
                 it.render(renderer);
+                i++;
+            }
+
+            //std::cout<<"rendering: "<<i<<std::endl;
         }
 
         void changeScale(unsigned scale)

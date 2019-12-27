@@ -9,121 +9,131 @@
 #include "custom/gui/displayer.h"
 #include "custom/handlers/player.h"
 #include "custom/content/level.h"
+#include "custom/states/stale.h"
 
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
 
-class stateCreating : public state
+namespace states
 {
-    public:
-        stateCreating(Game& game)
-            : state(game)
-        {
-            auto d = std::make_unique<gui::custom::displayer>(sf::Vector2f(128, 32));
-            d->setPosition({0, (float)game.getWindow().getSize().y - 32});
-            d->setText("making");
-
-            m_stack.add(std::move(d));
-
-            rect.setSize({48, 48});
-            rect.setOutlineColor(sf::Color::Green);
-            rect.setFillColor(sf::Color::Blue);
-        }
-
-        void handleEvent(sf::Event e) 
-        {
-            m_stack.handle(e, m_game->getWindow());
-
-            sf::Vector2i mousePosition;
-            
-            switch(e.type)
+    class creating : public state
+    {
+        public:
+            creating(Game& game)
+                : state(game)
             {
-                case sf::Event::MouseWheelMoved:
-                    if(e.mouseWheel.delta == 1)
-                        this->zoom(m_zoom + 0.1);
+                auto d = std::make_unique<gui::custom::displayer>(sf::Vector2f(128, 32));
+                d->setPosition({0, (float)game.getWindow().getSize().y - 32});
+                d->setText("making");
 
-                    if(e.mouseWheel.delta == -1)
-                        this->zoom(m_zoom - 0.1);
-                    break;
-                case sf::Event::MouseButtonPressed:
-                    mousePosition = sf::Mouse::getPosition(m_game->getWindow());
-                    m_level.addWall(m_current, {mousePosition.x / m_level.getScale(), mousePosition.y / m_level.getScale()});
-                    break;
-                case sf::Event::KeyPressed:
-                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::R))
-                    {
-                        if(m_current + 1 <= 2)
-                            m_current = m_current + 1;
-                    }
-                    
-                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::F))
-                    {
-                        if(m_current - 1 >= 0)
-                            m_current = m_current - 1;
-                    }
+                m_stack.add(std::move(d));
 
-                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::C))
-                    {
-                        m_level.clear();
-                    }
-                    break;
-                default:
-                    break;
+                rect.setSize({48, 48});
+                rect.setOutlineColor(sf::Color::Green);
+                rect.setFillColor(sf::Color::Blue);
             }
-        }
 
-        void handleInput()
-        {
+            void handleEvent(sf::Event e) 
+            {
+                m_stack.handle(e, m_game->getWindow());
 
-        }
+                sf::Vector2i mousePosition;
+                
+                switch(e.type)
+                {
+                    case sf::Event::MouseWheelMoved:
+                        if(e.mouseWheel.delta == 1)
+                            this->zoom(m_zoom + 0.1);
 
-        void update(sf::Time deltaTime)
-        {
-            m_level.update(deltaTime);
+                        if(e.mouseWheel.delta == -1)
+                            this->zoom(m_zoom - 0.1);
+                        break;
+                    case sf::Event::MouseButtonPressed:
+                        mousePosition = sf::Mouse::getPosition(m_game->getWindow());
+                        m_level.addWall(m_current, {mousePosition.x / m_level.getScale(), mousePosition.y / m_level.getScale()});
+                        std::cout<<mousePosition.x / m_level.getScale()<<"="<<mousePosition.y / m_level.getScale()<<std::endl;
+                        break;
+                    case sf::Event::KeyPressed:
+                        if(sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+                        {
+                            if(m_current + 1 <= 2)
+                                m_current = m_current + 1;
+                        }
+                        
+                        if(sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+                        {
+                            if(m_current - 1 >= 0)
+                                m_current = m_current - 1;
+                        }
 
-            if(m_current == 0)
-                rect.setFillColor(sf::Color::Green);
-            else if(m_current == 1)
-                rect.setFillColor(sf::Color::Red);
-            else 
-                rect.setFillColor(sf::Color::Magenta);
+                        if(sf::Keyboard::isKeyPressed(sf::Keyboard::C))
+                        {
+                            m_level.clear();
+                        }
 
-            rect.setPosition({sf::Mouse::getPosition(m_game->getWindow()).x, sf::Mouse::getPosition(m_game->getWindow()).y - 48});
-        }
+                        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                        {
+                            m_game->pushState<states::stale>(*m_game);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
 
-        void fixedUpdate(sf::Time deltaTime)
-        {
-            m_level.fixedUpdate(deltaTime);
-        }
+            void handleInput()
+            {
 
-        void render(sf::RenderTarget& renderer)
-        {
-            m_stack.render(renderer);
+            }
 
-            m_level.render(renderer);
+            void update(sf::Time deltaTime)
+            {
+                m_level.update(deltaTime);
 
-            renderer.draw(rect);
-        }
+                if(m_current == 0)
+                    rect.setFillColor(sf::Color::Green);
+                else if(m_current == 1)
+                    rect.setFillColor(sf::Color::Red);
+                else 
+                    rect.setFillColor(sf::Color::Magenta);
 
-        void zoom(float zoom)
-        {
-            if(zoom < 0.5 || zoom > 1.5)
-                return;
+                rect.setPosition({sf::Mouse::getPosition(m_game->getWindow()).x, sf::Mouse::getPosition(m_game->getWindow()).y - 48});
+            }
 
-            m_zoom = zoom;
+            void fixedUpdate(sf::Time deltaTime)
+            {
+                m_level.fixedUpdate(deltaTime);
+            }
 
-            m_level.changeScale(m_level.getDefaultScale() * zoom);
-        }
+            void render(sf::RenderTarget& renderer)
+            {
+                m_stack.render(renderer);
 
-    private:
-        gui::stack m_stack;
+                m_level.render(renderer);
 
-        sf::RectangleShape rect;
+                renderer.draw(rect);
+            }
 
-        level m_level;
+            void zoom(float zoom)
+            {
+                if(zoom < 0.5 || zoom > 1.5)
+                    return;
 
-        unsigned m_current = 0;
+                m_zoom = zoom;
 
-        float m_zoom = 1;
-};
+                m_level.changeScale(m_level.getDefaultScale() * zoom);
+            }
+
+        private:
+            gui::stack m_stack;
+
+            sf::RectangleShape rect;
+
+            level m_level;
+
+            unsigned m_current = 0;
+
+            float m_zoom = 1;
+    };
+}
