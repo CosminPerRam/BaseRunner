@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include "framework/handlers/object.h"
 
 #include <iostream>
@@ -6,8 +8,8 @@
 class wall : public object
 {
     public:
-        wall(unsigned scale, unsigned type, const sf::Vector2u& position = {0, 0})
-            : object(scale, (sf::Vector2f)position), m_type(type)
+        wall(unsigned scale, unsigned type, CollisionManager* collisionManager, const sf::Vector2u& position)
+            : object(scale, sf::Vector2f({position.x * scale, position.y * scale}), collisionManager), m_type(type)
         {
             if(type == 0)
                 rect.setFillColor(sf::Color::Green);
@@ -17,8 +19,6 @@ class wall : public object
                 rect.setFillColor(sf::Color::Magenta);
 
             rect.setSize({scale, scale});
-
-            m_position = {position.x * scale, position.y * scale};
             rect.setPosition(m_position);
         }
 
@@ -29,8 +29,7 @@ class wall : public object
 
         void setPosition(const sf::Vector2u& position)
         {
-            m_position = (sf::Vector2f)position;
-            rect.setPosition(m_position);
+            
         }
 
         unsigned getType()

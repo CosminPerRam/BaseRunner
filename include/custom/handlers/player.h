@@ -3,14 +3,18 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <vector>
+
 #include "framework/handlers/entity.h"
 #include "framework/util/maths.h"
+
+#include "custom/handlers/collisionManager.h"
 
 class player : public entity 
 {
     public:
-        player(unsigned scale, const sf::Vector2f& position = {0, 0})
-            : entity(scale, position)
+        player(unsigned scale, CollisionManager* collisionManager, const sf::Vector2f& position = {300, 300})
+            : entity(scale, collisionManager, position)
         {
             rect.setFillColor(sf::Color::Green);
             rect.setSize({scale, scale});
@@ -27,9 +31,8 @@ class player : public entity
         {
             rect.setPosition(m_position);
 
-            sf::Vector2i mouseCoord = sf::Mouse::getPosition();
-
-            rect.setRotation(math::angleOf(m_position, sf::Vector2f(mouseCoord)) + 180);
+            //sf::Vector2i mouseCoord = sf::Mouse::getPosition();
+            //rect.setRotation(math::angleOf(m_position, sf::Vector2f(mouseCoord)) + 180);
         }
 
         void fixedUpdate(sf::Time deltaTime)
@@ -40,13 +43,13 @@ class player : public entity
         void handleInput()
         {
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-                m_position.y -= 2;
+                this->move({m_position.x, m_position.y - 2});
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-                m_position.x -= 2;
+                this->move({m_position.x - 2, m_position.y});
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-                m_position.y += 2;
+                this->move({m_position.x, m_position.y + 2});
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-                m_position.x += 2;
+                this->move({m_position.x + 2, m_position.y});
         }
 
         void setPosition(const sf::Vector2f& position)
@@ -69,5 +72,11 @@ class player : public entity
         }
 
     private:
+        void move(const sf::Vector2f& to)
+        {
+            if(!isColliding(to))
+                setPosition(to);
+        }
+
         sf::RectangleShape rect;
 };

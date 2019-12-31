@@ -10,10 +10,74 @@
 #include "custom/handlers/player.h"
 #include "custom/content/level.h"
 #include "custom/states/stale.h"
+#include "custom/content/objects/wall.h"
 
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
+#include <vector>
+
+class _playinglevel : public level
+{
+    public:
+        void render(sf::RenderTarget& renderer)
+        {
+            for(auto& it : walls)
+                it.render(renderer);
+
+            m_player.render(renderer);
+        }
+
+        void changeScale(unsigned scale)
+        {
+            m_scale = scale;
+
+            for(auto& it : walls)
+                it.setScale(scale);
+
+            m_player.setScale(scale);
+        }
+
+        void update(sf::Time deltaTime)
+        {
+            m_player.update(deltaTime);
+        }
+
+        void fixedUpdate(sf::Time deltaTime)
+        {
+            m_player.fixedUpdate(deltaTime);
+        }
+
+        void handleInput()
+        {
+            m_player.handleInput();
+        }
+
+        void read(const std::string& name)
+        {
+            std::string data = files::getFileContent(files::data + "/levels/" + name + ".lvl");
+            nlohmann::json json = nlohmann::json::parse(data);
+
+            for(auto it = json["walls"].begin(); it != json["walls"].end(); it++)
+            {
+                unsigned bid = (*it)["bid"].get<unsigned>();
+                sf::Vector2f from = {(*it)["from"][0], (*it)["from"][1]};
+                sf::Vector2f to = {(*it)["to"][0], (*it)["to"][1]};
+
+                for(unsigned x = from.x; x <= to.x; x++)
+                {
+                    for(unsigned y = from.y; y <= to.y; y++)
+                    {
+                        walls.emplace_back(m_scale, bid, &m_collisionManager, (sf::Vector2u){x, y});
+                        //maybe add protection for overlapping?
+                    }
+                }
+            }
+        }
+
+    private:
+        std::vector<wall> walls;
+};
 
 namespace states
 {
@@ -21,7 +85,7 @@ namespace states
     {
         public:
             playing(Game& game)
-                : state(game), m_player(m_level.getScale())
+                : state(game)
             {
                 auto d = std::make_unique<gui::custom::displayer>(sf::Vector2f(128, 32));
                 d->setPosition({0, (float)game.getWindow().getSize().y - 32});
@@ -51,32 +115,27 @@ namespace states
 
             void handleInput()
             {
-                m_player.handleInput();
-                
+                m_level.handleInput();
             }
             void update(sf::Time deltaTime)
             {
                 m_level.update(deltaTime);
-                m_player.update(deltaTime);
             }
             void fixedUpdate(sf::Time deltaTime)
             {
                 m_level.fixedUpdate(deltaTime);
-                m_player.fixedUpdate(deltaTime);
             }
             void render(sf::RenderTarget& renderer)
             {
                 m_stack.render(renderer);
 
-                m_player.render(renderer);
                 m_level.render(renderer);
             }
 
         private:
             gui::stack m_stack;
 
-            level m_level;
-            player m_player;
+            _playinglevel m_level;
 
             unsigned m_scale = 32;
     };

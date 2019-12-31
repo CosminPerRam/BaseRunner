@@ -14,6 +14,93 @@
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
+#include <vector>
+
+class _creatinglevel : public level
+{
+    public:
+        _creatinglevel()
+        {
+            m_player.setPosition({-100, -100});
+        }
+
+        void render(sf::RenderTarget& renderer)
+        {
+            for(auto& it : walls)
+                it.render(renderer);
+
+            m_player.render(renderer);
+        }
+
+        void changeScale(unsigned scale)
+        {
+            m_scale = scale;
+
+            for(auto& it : walls)
+                it.setScale(scale);
+
+            m_player.setScale(scale);
+        }
+
+        void update(sf::Time deltaTime)
+        {
+            m_player.update(deltaTime);
+        }
+
+        void fixedUpdate(sf::Time deltaTime)
+        {
+            m_player.fixedUpdate(deltaTime);
+        }
+
+        void handleInput()
+        {
+            m_player.handleInput();
+        }
+
+        void read(const std::string& name)
+        {
+            std::string data = files::getFileContent(files::data + "/levels/" + name + ".lvl");
+            nlohmann::json json = nlohmann::json::parse(data);
+
+            for(auto it = json["walls"].begin(); it != json["walls"].end(); it++)
+            {
+                unsigned bid = (*it)["bid"].get<unsigned>();
+                sf::Vector2f from = {(*it)["from"][0], (*it)["from"][1]};
+                sf::Vector2f to = {(*it)["to"][0], (*it)["to"][1]};
+
+                for(unsigned x = from.x; x <= to.x; x++)
+                {
+                    for(unsigned y = from.y; y <= to.y; y++)
+                    {
+                        walls.emplace_back(m_scale, bid, &m_collisionManager, (sf::Vector2u){x, y});
+                        //maybe add protection for overlapping?
+                    }
+                }
+            }
+        }
+
+        void addWall(unsigned type, const sf::Vector2u& coords)
+        {
+            walls.emplace_back(m_scale, type, &m_collisionManager, coords);
+        }
+
+        void write(const std::string& name)
+        {
+            for(auto& it : walls)
+            {
+                sf::Vector2f pos = it.getPosition();
+                std::cout<<it.getType()<<" ("<<pos.x<<", "<<pos.y<<")"<<std::endl;
+            }
+        }
+
+        void clear()
+        {
+            walls.clear();
+        }
+
+    private:
+        std::vector<wall> walls;
+};
 
 namespace states
 {
@@ -57,13 +144,13 @@ namespace states
                     case sf::Event::KeyPressed:
                         if(sf::Keyboard::isKeyPressed(sf::Keyboard::R))
                         {
-                            if(m_current + 1 <= 2)
+                            if(m_current < 2)
                                 m_current = m_current + 1;
                         }
                         
                         if(sf::Keyboard::isKeyPressed(sf::Keyboard::F))
                         {
-                            if(m_current - 1 >= 0)
+                            if(m_current > 0)
                                 m_current = m_current - 1;
                         }
 
@@ -130,7 +217,7 @@ namespace states
 
             sf::RectangleShape rect;
 
-            level m_level;
+            _creatinglevel m_level;
 
             unsigned m_current = 0;
 
