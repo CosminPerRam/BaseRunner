@@ -3,22 +3,23 @@
 
 #include "framework/handlers/collision.h"
 
+#include <memory>
+
 class CollisionManager
 {
     public:
         void add(collision* coll)
         {
-            collisions.emplace_back(coll);
+            collisions.push_back(std::make_shared<collision>(*coll));
         }
 
-        bool colliding(collision* collision, sf::Vector2f position)
+        bool colliding(collision* f_collision, sf::Vector2f position)
         {
-            for(auto coll : collisions)
+            for(auto colli : collisions)
             {
-                if(coll->colliding(collision->getBounds(position)) && coll != collision)
+                collision* coll = colli.get();
+                if(coll->colliding(f_collision->getBounds(position)) && coll != f_collision)
                 {
-                    sf::Vector2f pos = coll->getPosition();
-                    std::cout<<pos.x<<" "<<pos.y<<" "<<coll->getScale()<<std::endl;
                     return true;
                 }
             }
@@ -32,5 +33,5 @@ class CollisionManager
         }
 
     private:
-        std::vector<collision*> collisions;
+        std::vector<std::shared_ptr<collision>> collisions;
 };

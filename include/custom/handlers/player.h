@@ -10,7 +10,7 @@
 
 #include "custom/handlers/collisionManager.h"
 
-class player : public entity 
+class player : public entity
 {
     public:
         player(unsigned scale, CollisionManager* collisionManager, const sf::Vector2f& position = {300, 300})

@@ -10,7 +10,7 @@ Game::Game()
     : m_window ({settings::resolution::WIDTH, settings::resolution::HEIGHT}, "BaseRunner")
 {
     m_window.setPosition({0, 0});
-    m_window.setFramerateLimit(240);
+    m_window.setFramerateLimit(240);    //game works based on frames, BAD
 
     pushState<states::menu>(*this);
 }

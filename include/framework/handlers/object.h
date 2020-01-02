@@ -17,7 +17,8 @@ class object : public collision
         {
             m_oid = oid++;
 
-            m_collisionManager->add(this);
+            if(m_oid != 0)
+                m_collisionManager->add(this);
         }
 
         virtual void update(sf::Time deltaTime) {}

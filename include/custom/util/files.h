@@ -26,11 +26,11 @@ namespace files
         return stream.str();
     }
 
-    void setFileContent(const std::string& filePath, const std::string& data)
+    void setFileContent(const std::string& filePath, const std::string& content)
     {
         std::ofstream fout(filePath);
 
-        fout << data;
+        fout << content;
 
         return;
     }

@@ -61,18 +61,16 @@ class _playinglevel : public level
             for(auto it = json["walls"].begin(); it != json["walls"].end(); it++)
             {
                 unsigned bid = (*it)["bid"].get<unsigned>();
-                sf::Vector2f from = {(*it)["from"][0], (*it)["from"][1]};
-                sf::Vector2f to = {(*it)["to"][0], (*it)["to"][1]};
 
-                for(unsigned x = from.x; x <= to.x; x++)
+                for(auto itt = (*it)["at"].begin(); itt != (*it)["at"].end(); itt++)
                 {
-                    for(unsigned y = from.y; y <= to.y; y++)
-                    {
-                        walls.emplace_back(m_scale, bid, &m_collisionManager, (sf::Vector2u){x, y});
-                        //maybe add protection for overlapping?
-                    }
+                    sf::Vector2u at = {(*itt)[0].get<unsigned>(), (*itt)[1].get<unsigned>()};
+
+                    walls.emplace_back(m_scale, bid, &m_collisionManager, at);
                 }
             }
+
+            std::cout<<"Walls: "<<walls.size()<<std::endl;
         }
 
     private:
