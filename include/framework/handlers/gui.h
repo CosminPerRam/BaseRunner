@@ -7,8 +7,8 @@
 #include <memory>
 #include <iostream>
 
-#include "../handlers/gui/widget.h"
-#include "../util/nonRules.h"
+#include "framework/handlers/widget.h"
+#include "framework/util/nonRules.h"
 #include "framework/resource/holder.h"
 
 namespace gui

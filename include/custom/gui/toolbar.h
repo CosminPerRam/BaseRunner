@@ -2,7 +2,7 @@
 #pragma once
 
 #include <framework/handlers/item.h>
-#include <framework/handlers/gui/widget.h>
+#include <framework/handlers/widget.h>
 #include <framework/handlers/settings.h>
 
 #include <iostream>
@@ -12,12 +12,9 @@ namespace gui::custom
     class toolbar : public gui::widget
     {
     public:
-        toolbar(sf::Vector2f position)
-            : m_position(position)
+        toolbar(sf::Vector2f position, float scale = 1)
+            : widget(position, "gui", sf::IntRect(0, 0, 32, 256), scale)
         {
-            m_body.setTexture(resourceHolder::get().textures.get("toolbar"));
-            m_body.setPosition(m_position);
-
             m_selected = 0;
         }
 
@@ -30,9 +27,9 @@ namespace gui::custom
             }
         }
 
-        void setScale(unsigned scale)
+        void setScale(float scale)
         {
-            
+            m_body.setScale(scale, scale);
         }
 
         void render(sf::RenderTarget& renderer)
@@ -48,10 +45,6 @@ namespace gui::custom
         }
 
     private:
-        sf::Vector2f m_position;
-
-        sf::Sprite m_body;
-
         std::array<item, 8> m_items;
         unsigned m_selected;
     };

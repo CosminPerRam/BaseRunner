@@ -110,11 +110,7 @@ namespace states
             creating(Game& game)
                 : state(game)
             {
-                auto d = std::make_unique<gui::custom::displayer>(sf::Vector2f(128, 32));
-                d->setPosition({0, (float)game.getWindow().getSize().y - 32});
-                d->setText("making");
-
-                m_stack.add(std::move(d));
+                m_stack.add(std::make_unique<gui::custom::displayer>(sf::Vector2f(0, (float)game.getWindow().getSize().y - 32), "making"));
 
                 rect.setSize({48, 48});
                 rect.setOutlineColor(sf::Color::Green);

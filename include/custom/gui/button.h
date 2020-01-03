@@ -3,7 +3,7 @@
 #include <functional>
 #include <iostream>
 
-#include "framework/handlers/gui/widget.h"
+#include "framework/handlers/widget.h"
 #include "custom/gui/displayer.h"
 
 namespace gui::custom
@@ -11,16 +11,10 @@ namespace gui::custom
     class button : public gui::custom::displayer
     {
     public:
-        button(const sf::Vector2f &size = {256, 64}, const std::string &text = "", sf::Color boxFillColor = sf::Color::Black,
-            sf::Color boxOutlineColor = sf::Color::Green, sf::Color textFillColor = sf::Color::White, sf::Color textOutlineColor = sf::Color::Black)
-            : displayer(size, text, boxFillColor, boxOutlineColor, textFillColor, textOutlineColor)
+        button(const sf::Vector2f position, const std::string text, float scale = 1)
+            : displayer(position, text, "gui", sf::IntRect(32, 0, 128, 32), scale)
         {
 
-        }
-
-        void setScale(unsigned scale)
-        {
-            
         }
 
         void setFunction(std::function<void(void)> func)
@@ -38,10 +32,8 @@ namespace gui::custom
                 switch (e.mouseButton.button)
                 {
                 case sf::Mouse::Left:
-                    if (m_box.getGlobalBounds().contains((float)pos.x, (float)pos.y))
-                    {
+                    if (m_body.getGlobalBounds().contains((float)pos.x, (float)pos.y))
                         m_function();
-                    }
 
                 default:
                     break;

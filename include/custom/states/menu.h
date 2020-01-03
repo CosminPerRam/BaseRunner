@@ -19,27 +19,21 @@ namespace states
             menu(Game& game)
                 : state(game)
             {
-                auto b = std::make_unique<gui::custom::button>();
-                b->setPosition({400, 200});
-                b->setText("exit");
+                auto b = std::make_unique<gui::custom::button>(sf::Vector2f(settings::resolution::WIDTH / 3 + 64, settings::resolution::HEIGHT / 3), "exit");
                 b->setFunction([&]() {
                     game.exitGame();
                 });
 
                 m_stack.add(std::move(b));
 
-                b = std::make_unique<gui::custom::button>();
-                b->setPosition({400, 264});
-                b->setText("play");
+                b = std::make_unique<gui::custom::button>(sf::Vector2f(settings::resolution::WIDTH / 3 + 64, settings::resolution::HEIGHT / 3 + 32), "play");
                 b->setFunction([&]() {
                     game.changeState<states::playing>(game);
                 });
 
                 m_stack.add(std::move(b));
 
-                b = std::make_unique<gui::custom::button>();
-                b->setPosition({400, 328});
-                b->setText("create");
+                b = std::make_unique<gui::custom::button>(sf::Vector2f(settings::resolution::WIDTH / 3 + 64, settings::resolution::HEIGHT / 3 + 64), "create");
                 b->setFunction([&]() {
                     game.changeState<states::creating>(game);
                 });

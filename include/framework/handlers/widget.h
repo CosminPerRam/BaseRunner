@@ -12,37 +12,52 @@ namespace gui
     class widget //very straight down widget
     {
     public:
+        widget(sf::Vector2f position, std::string resource, sf::IntRect sub, float scale = 1)
+            : m_scale(scale), m_position(position), m_size(sub.width, sub.height)
+        {
+            m_body.setTexture(resourceHolder::get().textures.get(resource));
+            m_body.setTextureRect(sub);
+
+            m_body.setTexture(resourceHolder::get().textures.get(resource));
+            m_body.setTextureRect(sub);
+
+            m_body.setPosition(position);
+            m_body.setScale(scale, scale);
+        }
+
         virtual void handle(sf::Event e, const sf::RenderWindow &window) = 0;
         virtual void render(sf::RenderTarget &renderer) = 0;
 
-        virtual void setScale(unsigned scale) = 0;
+        virtual void setScale(float scale) = 0;
 
-        unsigned getScale()
+        float getScale()
         {
             return m_scale;
         }
 
     protected:
-        unsigned m_scale;
+        sf::Sprite m_body;
 
         sf::Vector2f m_position;
+        sf::Vector2f m_size;
+
+        float m_scale;
     };
 
-    namespace _simple
+    namespace simple
     {
-        class Text : public sf::Text
+        class text : public sf::Text
         {
         public:
-            Text()
+            text(unsigned size, std::string font = "arial", sf::Color fillColor = sf::Color::White)
             {
-                setCharacterSize(25);
-                setOutlineColor(sf::Color::Black);
-                setFillColor(sf::Color::White);
-                setFont(resourceHolder::get().fonts.get("arial"));
+                setCharacterSize(size);
+                setFillColor(fillColor);
+                setFont(resourceHolder::get().fonts.get(font));
             }
         };
 
-        class Rectangle : public sf::RectangleShape
+        class rectangle : public sf::RectangleShape
         {
         public:
             bool isRolledOn(const sf::RenderWindow &window) const

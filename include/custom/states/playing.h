@@ -86,15 +86,8 @@ namespace states
             playing(Game& game)
                 : state(game)
             {
-                auto d = std::make_unique<gui::custom::displayer>(sf::Vector2f(128, 32));
-                d->setPosition({0, (float)game.getWindow().getSize().y - 32});
-                d->setText("playing");
-
-                m_stack.add(std::move(d));
-
-                auto k = std::make_unique<gui::custom::toolbar>(sf::Vector2f({0, settings::resolution::HEIGHT / 3}));
-
-                m_stack.add(std::move(k));
+                m_stack.add(std::make_unique<gui::custom::displayer>(sf::Vector2f(0, (float)game.getWindow().getSize().y - 32), "playing"));
+                m_stack.add(std::make_unique<gui::custom::toolbar>(sf::Vector2f({0, settings::resolution::HEIGHT / 3})));
 
                 m_level.read("test");
             }
