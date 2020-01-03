@@ -12,8 +12,8 @@ static unsigned oid = 0;
 class object : public collision
 {
     public:
-        object(unsigned scale, const sf::Vector2f& position, CollisionManager* collisionManager, _collision::type type = _collision::type::constant)
-            : collision(scale, position, type), m_collisionManager(collisionManager)
+        object(unsigned scale, const sf::Vector2f& position, math::quadPoint bounds, CollisionManager* collisionManager, _collision::type type = _collision::type::constant)
+            : collision(scale, position, bounds, type), m_collisionManager(collisionManager)
         {
             m_oid = oid++;
 

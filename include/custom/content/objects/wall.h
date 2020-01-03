@@ -9,7 +9,8 @@ class wall : public object
 {
     public:
         wall(unsigned scale, unsigned type, CollisionManager* collisionManager, const sf::Vector2u& position)
-            : object(scale, sf::Vector2f({position.x * scale, position.y * scale}), collisionManager), m_type(type)
+            : object(scale, sf::Vector2f({position.x * scale, position.y * scale}), 
+                {sf::Vector2f({0, 0}), sf::Vector2f({scale, 0}), sf::Vector2f({scale, scale}), sf::Vector2f({0, scale})}, collisionManager), m_type(type)
         {
             if(type == 0)
                 rect.setFillColor(sf::Color::Green);

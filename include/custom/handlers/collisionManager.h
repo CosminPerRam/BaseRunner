@@ -13,18 +13,17 @@ class CollisionManager
             collisions.push_back(std::make_shared<collision>(*coll));
         }
 
-        bool colliding(collision* f_collision, sf::Vector2f position)
+        unsigned colliding(math::quadPoint obj, unsigned nid)
         {
             for(auto colli : collisions)
             {
                 collision* coll = colli.get();
-                if(coll->colliding(f_collision->getBounds(position)) && coll != f_collision)
-                {
-                    return true;
-                }
+                
+                if(coll->colliding(obj) && coll->getID() != nid)
+                    return coll->getID();
             }
 
-            return false;
+            return 0;
         }
 
         unsigned size()

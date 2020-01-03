@@ -7,6 +7,7 @@
 
 #include "framework/handlers/entity.h"
 #include "framework/util/maths.h"
+#include "framework/handlers/settings.h"
 
 #include "custom/handlers/collisionManager.h"
 
@@ -14,30 +15,52 @@ class player : public entity
 {
     public:
         player(unsigned scale, CollisionManager* collisionManager, const sf::Vector2f& position = {300, 300})
-            : entity(scale, collisionManager, position)
+            : entity(scale, position, {sf::Vector2f({0, 0}), sf::Vector2f({handle::player::BOUNDS_WIDTH, 0}), 
+                sf::Vector2f({handle::player::BOUNDS_WIDTH, handle::player::BOUNDS_HEIGHT}), sf::Vector2f({0, handle::player::BOUNDS_HEIGHT})}, collisionManager)
         {
-            rect.setFillColor(sf::Color::Green);
-            rect.setSize({scale, scale});
+            m_body.setTexture(resourceHolder::get().textures.get("player"));
+            m_body.setPosition(position);
 
-            rect.setPosition(position);
+            this->setBounds(quad::toPosition(this->getLocalBounds(), position));
         }
 
         void render(sf::RenderTarget& renderer)
         {
-            renderer.draw(rect);
+            renderer.draw(m_body);
+
+            sf::CircleShape c;
+            c.setRadius(3);
+            c.setFillColor(sf::Color::Red);
+
+            math::quadPoint Q = getBounds();
+
+            c.setPosition(Q[0]);
+            renderer.draw(c);
+
+            c.setPosition(Q[1]);
+            renderer.draw(c);
+
+            c.setPosition(Q[2]);
+            renderer.draw(c);
+
+            c.setPosition(Q[3]);
+            renderer.draw(c);
+
+            c.setPosition((Q[2] - Q[0]) / 2.f + Q[0]);
+            renderer.draw(c);
         }
 
         void update(sf::Time deltaTime)
         {
-            rect.setPosition(m_position);
+            m_body.setPosition(m_position);
 
-            //sf::Vector2i mouseCoord = sf::Mouse::getPosition();
-            //rect.setRotation(math::angleOf(m_position, sf::Vector2f(mouseCoord)) + 180);
+            sf::Vector2i mouseCoord = sf::Mouse::getPosition();
+            this->setRotation(math::angleOf(m_position, sf::Vector2f(mouseCoord)));
         }
 
         void fixedUpdate(sf::Time deltaTime)
         {
-
+            
         }
 
         void handleInput()
@@ -55,28 +78,33 @@ class player : public entity
         void setPosition(const sf::Vector2f& position)
         {
             m_position = position;
-            rect.setPosition(position);
+
+            this->setBounds(quad::toPosition(quad::toAngle(getLocalBounds(), m_angle), position));
+            m_body.setPosition(position);
         }
 
-        void setOrientation(const float& orientation)
+        void setRotation(const float angle)
         {
-            m_orientation = orientation;
-            rect.setRotation(orientation);
+            if(!isColliding(quad::toPosition(quad::toAngle(getLocalBounds(), angle), m_position)))
+            {
+                m_angle = angle;
+
+                this->setBounds(quad::toPosition(quad::toAngle(getLocalBounds(), angle), m_position));
+                m_body.setRotation(angle);
+            }
         }
 
         void setScale(unsigned scale)
         {
-            rect.setSize({scale, scale});
-            
             m_scale = scale;
-        }
+        } //work on this
 
     private:
-        void move(const sf::Vector2f& to)
+        void move(sf::Vector2f to)
         {
-            if(!isColliding(to))
-                setPosition(to);
+            if(!isColliding(quad::toPosition(quad::toAngle(getLocalBounds(), m_angle), to)))
+                m_position = to;
         }
 
-        sf::RectangleShape rect;
+        sf::Sprite m_body;
 };

@@ -8,16 +8,16 @@ static unsigned eid = 0;
 class entity : public object
 {
     public:
-        entity(unsigned scale, CollisionManager* collisionManager, const sf::Vector2f& position)
-            : object(scale, position, collisionManager, _collision::type::variable)
+        entity(unsigned scale, const sf::Vector2f& position, math::quadPoint bounds, CollisionManager* collisionManager)
+            : object(scale, position, bounds, collisionManager, _collision::type::variable)
         {
             m_eid = eid++;
         }
 
     protected:
-        bool isColliding(sf::Vector2f position)
+        bool isColliding(math::quadPoint to)
         {
-            return m_collisionManager->colliding(this, position);
+            return m_collisionManager->colliding(to, this->getID());
         }
 
     private:

@@ -11,6 +11,7 @@
 #include "custom/content/level.h"
 #include "custom/states/stale.h"
 #include "custom/content/objects/wall.h"
+#include "custom/gui/toolbar.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -91,6 +92,10 @@ namespace states
 
                 m_stack.add(std::move(d));
 
+                auto k = std::make_unique<gui::custom::toolbar>(sf::Vector2f({0, settings::resolution::HEIGHT / 3}));
+
+                m_stack.add(std::move(k));
+
                 m_level.read("test");
             }
 
@@ -125,9 +130,9 @@ namespace states
             }
             void render(sf::RenderTarget& renderer)
             {
-                m_stack.render(renderer);
-
                 m_level.render(renderer);
+
+                m_stack.render(renderer);
             }
 
         private:
