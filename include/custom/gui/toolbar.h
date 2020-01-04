@@ -13,9 +13,15 @@ namespace gui::custom
     {
     public:
         toolbar(sf::Vector2f position, float scale = 1)
-            : widget(position, "gui", sf::IntRect(0, 0, 32, 256), scale)
+            : widget(position, "others/gui", sf::IntRect(0, 0, 32, 256), scale)
         {
             m_selected = 0;
+
+            m_selectedBody.setTexture(resourceHolder::get().textures.get("others/gui"));
+            m_selectedBody.setTextureRect(sf::IntRect(32, 32, 32, 32));
+
+            m_selectedBody.setPosition(position);
+            m_selectedBody.setScale(scale, scale);
         }
 
         void handle(sf::Event e, const sf::RenderWindow& window)
@@ -23,7 +29,10 @@ namespace gui::custom
             if(e.type == sf::Event::MouseWheelScrolled)
             {
                 if(-e.mouseWheelScroll.delta + m_selected > -1 && -e.mouseWheelScroll.delta + m_selected < 8)
+                {
                     m_selected = m_selected + -e.mouseWheelScroll.delta;
+                    m_selectedBody.setPosition(m_position + (sf::Vector2f(0, 32 * m_scale) * (float)m_selected));
+                }
             }
         }
 
@@ -35,17 +44,13 @@ namespace gui::custom
         void render(sf::RenderTarget& renderer)
         {
             renderer.draw(m_body);
-
-            sf::CircleShape c;
-            c.setRadius(4);
-            c.setFillColor(sf::Color::Red);
-
-            c.setPosition(16, settings::resolution::HEIGHT / 3 + 32 * m_selected + 16);
-            renderer.draw(c);
+            renderer.draw(m_selectedBody);
         }
 
     private:
         std::array<item, 8> m_items;
         unsigned m_selected;
+
+        sf::Sprite m_selectedBody;
     };
 }

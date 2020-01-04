@@ -6,7 +6,7 @@
 #include "framework/handlers/game.h"
 #include "framework/util/maths.h"
 
-#include "custom/gui/displayer.h"
+#include "custom/gui/text.h"
 #include "custom/handlers/player.h"
 #include "custom/content/level.h"
 #include "custom/states/stale.h"
@@ -110,7 +110,7 @@ namespace states
             creating(Game& game)
                 : state(game)
             {
-                m_stack.add(std::make_unique<gui::custom::displayer>(sf::Vector2f(0, (float)game.getWindow().getSize().y - 32), "making"));
+                m_stack.add(std::make_unique<gui::custom::text>(sf::Vector2f(0, (float)game.getWindow().getSize().y - 32), "making"));
 
                 rect.setSize({48, 48});
                 rect.setOutlineColor(sf::Color::Green);

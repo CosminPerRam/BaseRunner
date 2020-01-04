@@ -18,9 +18,6 @@ namespace gui
             m_body.setTexture(resourceHolder::get().textures.get(resource));
             m_body.setTextureRect(sub);
 
-            m_body.setTexture(resourceHolder::get().textures.get(resource));
-            m_body.setTextureRect(sub);
-
             m_body.setPosition(position);
             m_body.setScale(scale, scale);
         }
@@ -43,40 +40,4 @@ namespace gui
 
         float m_scale;
     };
-
-    namespace simple
-    {
-        class text : public sf::Text
-        {
-        public:
-            text(unsigned size, std::string font = "arial", sf::Color fillColor = sf::Color::White)
-            {
-                setCharacterSize(size);
-                setFillColor(fillColor);
-                setFont(resourceHolder::get().fonts.get(font));
-            }
-        };
-
-        class rectangle : public sf::RectangleShape
-        {
-        public:
-            bool isRolledOn(const sf::RenderWindow &window) const
-            {
-                auto pos = sf::Mouse::getPosition(window);
-                return getGlobalBounds().contains((float)pos.x, (float)pos.y);
-            }
-
-            bool isClicked(sf::Event e, const sf::RenderWindow &window)
-            {
-                if (isRolledOn(window))
-                {
-                    if (e.type == sf::Event::MouseButtonPressed)
-                    {
-                        return e.mouseButton.button == sf::Mouse::Left;
-                    }
-                }
-                return false;
-            }
-        };
-    }
 }

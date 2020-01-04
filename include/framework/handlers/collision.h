@@ -13,10 +13,13 @@ static unsigned cid = 1;
 class collision
 {
     public:
-        collision(unsigned scale, const sf::Vector2f& position, math::quadPoint bounds, _collision::type type)
-            : m_scale(scale), m_position(position), m_type(type), m_localBounds(bounds), m_bounds(quad::toPosition(bounds, position))
+        collision(unsigned scale, const sf::Vector2f& position, math::quadPoint bounds, sf::Vector2f drift, _collision::type type)
+            : m_scale(scale), m_position(position), m_type(type), m_localBounds(bounds), m_bounds(quad::toPosition(bounds, position)), m_drift(drift)
         {
             m_cid = cid++;
+
+            m_localBounds = quad::toEverySub(m_localBounds, drift);
+            m_bounds = quad::toEverySub(m_bounds, drift);
         }
 
         collision(const collision &src)
@@ -147,6 +150,16 @@ class collision
             return 1;
         }
 
+        void setDrift(sf::Vector2f drift)
+        {
+            m_drift = drift;
+        }
+
+        sf::Vector2f getDrift()
+        {
+            return m_drift;
+        }
+
     protected:
         float m_angle;
 
@@ -158,6 +171,8 @@ class collision
     private:
         math::quadPoint m_localBounds;
         math::quadPoint m_bounds;
+
+        sf::Vector2f m_drift;
 
         unsigned m_cid; //collisionid
 

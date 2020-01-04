@@ -86,18 +86,39 @@ namespace math
 
 namespace quad
 {
-    math::quadPoint toPosition(math::quadPoint obj, sf::Vector2f position)
+    sf::Vector2f getCenter(math::quadPoint obj)
     {
-        return {position, sf::Vector2f({position.x + obj[1].x, position.y + obj[1].y}), sf::Vector2f({position.x + obj[2].x, position.y + obj[2].y}), sf::Vector2f({position.x + obj[3].x, position.y + obj[3].y})};
+        return (obj[2] - obj[0]) / 2.f + obj[0];
     }
 
-    math::quadPoint toAngle(math::quadPoint obj, float angle)
+    sf::Vector2f getUpperCenter(math::quadPoint obj)
     {
-        sf::Vector2f A = obj[0];
-        sf::Vector2f B = math::rotatePoint(obj[0], angle, obj[1]);
-        sf::Vector2f C = math::rotatePoint(obj[0], angle, obj[2]);
-        sf::Vector2f D = math::rotatePoint(obj[0], angle, obj[3]);
+        return (obj[1] - obj[0]) / 2.f + obj[0];
+    }
+
+    math::quadPoint toPosition(math::quadPoint obj, sf::Vector2f position)
+    {
+        return {sf::Vector2f({position.x + obj[0].x, position.y + obj[0].y}), sf::Vector2f({position.x + obj[1].x, position.y + obj[1].y}), 
+            sf::Vector2f({position.x + obj[2].x, position.y + obj[2].y}), sf::Vector2f({position.x + obj[3].x, position.y + obj[3].y})};
+    }
+
+    math::quadPoint toAngle(math::quadPoint obj, float angle, sf::Vector2f Ce)
+    {
+        sf::Vector2f A = math::rotatePoint(Ce, angle, obj[0]);
+        sf::Vector2f B = math::rotatePoint(Ce, angle, obj[1]);
+        sf::Vector2f C = math::rotatePoint(Ce, angle, obj[2]);
+        sf::Vector2f D = math::rotatePoint(Ce, angle, obj[3]);
 
         return {A, B, C, D};
+    }
+
+    math::quadPoint toEverySub(math::quadPoint obj, sf::Vector2f to)
+    {
+        obj[0] = obj[0] - to;
+        obj[1] = obj[1] - to;
+        obj[2] = obj[2] - to;
+        obj[3] = obj[3] - to;
+
+        return obj;
     }
 }
