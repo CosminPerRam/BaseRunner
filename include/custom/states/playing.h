@@ -11,6 +11,7 @@
 #include "custom/content/level.h"
 #include "custom/states/stale.h"
 #include "custom/content/objects/wall.h"
+#include "custom/content/objects/tile.h"
 #include "custom/gui/toolbar.h"
 
 #include <SFML/Graphics.hpp>
@@ -24,6 +25,9 @@ class _playinglevel : public level
         void render(sf::RenderTarget& renderer)
         {
             for(auto& it : walls)
+                it.render(renderer);
+
+            for(auto& it : tiles)
                 it.render(renderer);
 
             m_player.render(renderer);
@@ -72,10 +76,26 @@ class _playinglevel : public level
             }
 
             std::cout<<"Walls: "<<walls.size()<<std::endl;
+
+            for(auto it = json["tiles"].begin(); it != json["tiles"].end(); it++)
+            {
+                unsigned bid = (*it)["bid"].get<unsigned>();
+
+                for(auto itt = (*it)["at"].begin(); itt != (*it)["at"].end(); itt++)
+                {
+                    sf::Vector2u at = {(*itt)[0].get<unsigned>(), (*itt)[1].get<unsigned>()};
+
+                    tiles.emplace_back(m_scale, bid, &m_collisionManager, at);
+                }
+            }
+
+            std::cout<<"Tiles: "<<tiles.size()<<std::endl;
         }
 
     private:
         std::vector<wall> walls;
+
+        std::vector<tile> tiles;
 };
 
 namespace states

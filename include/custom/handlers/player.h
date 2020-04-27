@@ -16,14 +16,14 @@ class player : public entity
 {
     public:
         player(unsigned scale, CollisionManager* collisionManager, const sf::Vector2f& position = {300, 300})
-            : entity(scale, position, {sf::Vector2f({0, 0}), sf::Vector2f({handle::player::BOUNDS_WIDTH, 0}), 
-                sf::Vector2f({handle::player::BOUNDS_WIDTH, handle::player::BOUNDS_HEIGHT}), sf::Vector2f({0, handle::player::BOUNDS_HEIGHT})}, 
-                sf::Vector2f(handle::player::BOUNDS_WIDTH / 2, handle::player::BOUNDS_HEIGHT / 2), collisionManager)
+            : entity(scale, position, {sf::Vector2f({0, 0}), sf::Vector2f({resource::handle::player::BOUNDS_WIDTH, 0}), 
+                sf::Vector2f({resource::handle::player::BOUNDS_WIDTH, resource::handle::player::BOUNDS_HEIGHT}), sf::Vector2f({0, resource::handle::player::BOUNDS_HEIGHT})}, 
+                sf::Vector2f(resource::handle::player::BOUNDS_WIDTH / 2, resource::handle::player::BOUNDS_HEIGHT / 2), collisionManager)
         {
             m_body.setTexture(resourceHolder::get().textures.get("entities/player"));
             m_body.setPosition(position);
 
-            m_body.setOrigin(handle::player::BOUNDS_WIDTH / 2, handle::player::BOUNDS_HEIGHT / 2);
+            m_body.setOrigin(resource::handle::player::BOUNDS_WIDTH / 2, resource::handle::player::BOUNDS_HEIGHT / 2);
 
             this->setBounds(quad::toPosition(this->getLocalBounds(), position));
         }
@@ -111,7 +111,4 @@ class player : public entity
         {
             m_scale = scale;
         } //work on this
-
-    private:
-        sf::Sprite m_body;
 };

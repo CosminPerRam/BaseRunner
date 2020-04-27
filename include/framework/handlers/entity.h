@@ -9,7 +9,7 @@ class entity : public object
 {
     public:
         entity(unsigned scale, const sf::Vector2f& position, math::quadPoint bounds, sf::Vector2f drift, CollisionManager* collisionManager)
-            : object(scale, position, bounds, collisionManager, drift, _collision::type::variable)
+            : object(scale, position, bounds, collisionManager, drift, _collision::type::VAR)
         {
             m_eid = eid++;
         }

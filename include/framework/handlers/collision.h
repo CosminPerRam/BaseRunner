@@ -5,7 +5,7 @@
 
 namespace _collision
 {
-    enum class type {constant, variable};
+    enum class type { CONST, VAR, GHOST };
 }
 
 static unsigned cid = 1;
@@ -134,6 +134,7 @@ class collision
                 if (B_min > A_max || A_min > B_max)
                     return false;
             }
+            
             return true;
         }
 
@@ -142,12 +143,9 @@ class collision
             return m_cid;
         }
 
-        unsigned type()
+        _collision::type getType()
         {
-            if(m_type == _collision::type::constant)
-                return 0;
-
-            return 1;
+            return m_type;
         }
 
         void setDrift(sf::Vector2f drift)

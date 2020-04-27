@@ -12,13 +12,13 @@ namespace gui::custom
     class toolbar : public gui::widget
     {
     public:
-        toolbar(sf::Vector2f position, float scale = 1)
-            : widget(position, "others/gui", sf::IntRect(0, 0, 32, 256), scale)
+        toolbar(sf::Vector2f position, float scale = 1, resdat data = resource::content::gui::TOOLBAR)
+            : widget(position, std::get<1>(data), std::get<2>(data), scale)
         {
             m_selected = 0;
 
-            m_selectedBody.setTexture(resourceHolder::get().textures.get("others/gui"));
-            m_selectedBody.setTextureRect(sf::IntRect(32, 32, 32, 32));
+            m_selectedBody.setTexture(resourceHolder::get().textures.get(std::get<1>(resource::content::gui::TOOLBAR_SELECT)));
+            m_selectedBody.setTextureRect(std::get<2>(resource::content::gui::TOOLBAR_SELECT));
 
             m_selectedBody.setPosition(position);
             m_selectedBody.setScale(scale, scale);

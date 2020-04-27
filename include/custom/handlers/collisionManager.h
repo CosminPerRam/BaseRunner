@@ -18,9 +18,12 @@ class CollisionManager
             for(auto colli : collisions)
             {
                 collision* coll = colli.get();
-                
-                if(coll->colliding(obj) && coll->getID() != nid)
-                    return coll->getID();
+
+                if(coll->getType() != _collision::type::GHOST)
+                {
+                    if(coll->colliding(obj) && coll->getID() != nid)
+                        return coll->getID();
+                }
             }
 
             return 0;

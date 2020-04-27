@@ -6,13 +6,15 @@
 #include "framework/handlers/widget.h"
 #include "custom/gui/text.h"
 
+#include "custom/others/data.h"
+
 namespace gui::custom
 {
     class button : public text
     {
     public:
-        button(const sf::Vector2f position, const std::string content, const std::string resource = "others/gui", sf::IntRect sub = sf::IntRect(32, 0, 128, 32), float scale = 1)
-            : text(position, content, resource, sub, scale)
+        button(const sf::Vector2f position, const std::string content, float scale = 1, resdat data = resource::content::gui::NORMAL_BUTTON)
+            : text(position, content, std::get<1>(data), std::get<2>(data), scale)
         {
             m_text.setPosition(position.x + m_size.x / 2 - m_text.getGlobalBounds().width / 2, position.y + m_size.y / 4);
         }
