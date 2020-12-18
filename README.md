@@ -12,7 +12,7 @@ And uses some bits from here to there from:
 * [Hopson97's Basic Game Framework][hopson-engine]
 
 # Wise words
-> [Shinobu Kocho best waifu.][rick]
+> [~~Shinobu Kocho~~ Speedwagon best waifu.][rick]
 
 [sfml]: https://www.sfml-dev.org
 [hopson-engine]: https://github.com/Hopson97/SFML-Game-Framework
